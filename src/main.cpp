@@ -109,6 +109,8 @@ class Player {
             bounding_box(create_bounding_box(sprite, size))
         {}
 
+
+
         /**
          * Update the position and bounding box of the player based on d-pad movement.
          */
@@ -137,6 +139,23 @@ class Player {
         bn::size size; // The width and height of the sprite
         bn::rect bounding_box; // The rectangle around the sprite for checking collision
 };
+
+    class Enemy {
+        public:
+            Enemy(int starting_x, int starting_y, bn::size enemy_size) :
+                sprite(bn::sprite_items::square.create_sprite(starting_x, starting_y)),
+                size(enemy_size),
+                bounding_box(create_bounding_box(sprite, size))
+
+            {}    
+            
+            bn::sprite_ptr sprite;
+            bn::size size;
+            bn::rect bounding_box;
+
+            
+    };
+
 
 int main() {
     bn::core::init();
