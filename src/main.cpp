@@ -167,8 +167,6 @@ int main() {
     Player player = Player(-50, 22, 3.5, PLAYER_SIZE);
   
 
-    // bn::sprite_ptr enemy_sprite = bn::sprite_items::square.create_sprite(-30, 22);
-    // bn::rect enemy_bounding_box = create_bounding_box(enemy_sprite, ENEMY_SIZE);
     Enemy enemy(40, -10, ENEMY_SIZE);
 
     while(true) {
