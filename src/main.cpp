@@ -284,6 +284,15 @@ int main()
         player.update();
         enemy.update(player);
 
+
+        frame_counter++;
+        if(frame_counter >= FRAMES_TO_ADD && enemies.size() < 10) {
+        int random_x = bn::random().get_int(MIN_X + 10, MAX_X - 10);
+        int random_y = bn::random().get_int(MIN_Y + 10, MAX_Y - 10);
+        enemies.push_back(Enemy(random_x, random_y, ENEMY_SIZE, 1.5));
+        frame_counter = 0;
+        }
+
  
         // Reset the current score and player position if the player collides with enemy
         if(enemy.bounding_box.intersects(player.bounding_box)) {
