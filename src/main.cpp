@@ -131,6 +131,24 @@ class Player {
                 sprite.set_y(sprite.y() + speed);
             }
 
+            // Prevent going off screen
+            int half_width = size.width() / 2;
+            int half_height = size.height() / 2;
+
+            if(sprite.x() < MIN_X + half_width) {
+                sprite.set_x(MIN_X + half_width);
+            }
+            if(sprite.x() > MAX_X - half_width) {
+                sprite.set_x(MAX_X - half_width);
+            }
+
+            if(sprite.y() < MIN_Y + half_height) {
+                sprite.set_y(MIN_Y + half_height);
+            }
+            if(sprite.y() > MAX_Y - half_height) {
+                sprite.set_y(MAX_Y - half_height);
+            }
+
             bounding_box = create_bounding_box(sprite, size);
         }
 
