@@ -7,6 +7,8 @@
 #include <bn_sprite_ptr.h>
 #include <bn_sprite_text_generator.h>
 #include <bn_random.h>
+#include <cstdlib>
+#include <ctime> 
 
 #include "common_fixed_8x16_font.h"
 #include "bn_sprite_items_dot.h"
@@ -238,16 +240,7 @@ public:
             bn::rect bounding_box;
             bn::fixed speed;
             bn::random random;
-
-class Enemy
-{
-public:
-    Enemy(int starting_x, int starting_y, bn::size enemy_size) : sprite(bn::sprite_items::square.create_sprite(starting_x, starting_y)),
-                                                                 size(enemy_size),
-                                                                 bounding_box(create_bounding_box(sprite, size))
-
-    {
-    }
+ 
  
     bn::sprite_ptr sprite;
     bn::size size;
@@ -257,24 +250,32 @@ public:
 int main()
 {
     bn::core::init();
+    
 
     // Create a new score display
-    ScoreDisplay scoreDisplay = ScoreDisplay();
+    ScoreDisplay scoreDisplay;
 
     // Create a player and initialize it
-    Player player = Player(-50, 22, 3.5, PLAYER_SIZE);
+    Player player = Player (-50, 22, 3, PLAYER_SIZE); 
 
  
     Enemy enemy(40, -10, ENEMY_SIZE, 1.5);
  
     // Vector of enemies
     bn::vector<Enemy, 10> enemies;  
+    enemies.push_back(Enemy(-40,0 , ENEMY_SIZE, 1.5));
 
-    // Added enemies 
-    enemies.push_back(Enemy)(40, -20, ENEMY_SIZE));
-    enemies.push_back(Enemy)(40,  20, ENEMY_SIZE));
-    enemies.push_back(Enemy)(10, 20, ENEMY_SIZE));
-    enemies.push_back(Enemy)(-50, -0, ENEMY_SIZE));
+    // counter to add enemies
+    int frame_counter = 0;
+    const int FRAMES_TO_ADD = 150;
+
+
+
+// Added enemies 
+// enemies.push_back(Enemy(40, -20, ENEMY_SIZE, 1.5));
+// enemies.push_back(Enemy(40,  20, ENEMY_SIZE, 1.5));
+// enemies.push_back(Enemy(10,  20, ENEMY_SIZE, 1.5));
+// enemies.push_back(Enemy(-50, 0,  ENEMY_SIZE, 1.5));
 
 
         while (true)
@@ -308,11 +309,11 @@ int main()
         scoreDisplay.resetScore();
         }
  
-        }
+    }
 
         // Update and display scores after checking all enemies
         scoreDisplay.update();
 
         // Refresh the screen
         bn::core::update();
-        }
+    }
