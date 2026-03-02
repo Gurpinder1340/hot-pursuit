@@ -6,6 +6,7 @@
 #include <bn_string.h>
 #include <bn_sprite_ptr.h>
 #include <bn_sprite_text_generator.h>
+#include <bn_random.h>
 
 #include "common_fixed_8x16_font.h"
 #include "bn_sprite_items_dot.h"
@@ -170,11 +171,23 @@ class Player {
                 // Update bounding box
                 bounding_box = create_bounding_box(sprite, size);
             }
+
+            // function to jump to a random position
+            void jump_to_random_position() {
+                int random_x = random.get_int(MIN_X + 10, MAX_X - 10);
+                int random_y = random.get_int(MIN_Y + 10, MAX_Y - 10);
+
+                sprite.set_x(random_x);
+                sprite.set_y(random_y);
+
+                bounding_box = create_bounding_box(sprite, size);
+            }
             
             bn::sprite_ptr sprite;
             bn::size size;
             bn::rect bounding_box;
             bn::fixed speed;
+            bn::random random;
 
             
     };
@@ -201,6 +214,7 @@ int main() {
             scoreDisplay.resetScore();
             player.sprite.set_x(44);
             player.sprite.set_y(22);
+            enemy.jump_to_random_position();
         }
 
         // Update the scores and disaply them
