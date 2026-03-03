@@ -122,65 +122,35 @@ public:
      */
     void update()
     {
-        if (bn::keypad::right_held())
-        {
+        if(bn::keypad::right_held()) {
             sprite.set_x(sprite.x() + speed);
         }
-        if (bn::keypad::left_held())
-        {
+        if(bn::keypad::left_held()) {
             sprite.set_x(sprite.x() - speed);
         }
-        // TODO: Add logic for up and down
-
- 
-
-        /**
-         * Update the position and bounding box of the player based on d-pad movement.
-         */
-        void update() {
-            if(bn::keypad::right_held()) {
-                sprite.set_x(sprite.x() + speed);
-            }
-            if(bn::keypad::left_held()) {
-                sprite.set_x(sprite.x() - speed);
-            }
-            // TODO: Add logic for up and down
-
-            if(bn::keypad::up_held()) {
-                sprite.set_y(sprite.y()- speed);
-            }
-            if(bn::keypad::down_held()) {
-                sprite.set_y(sprite.y() + speed);
-            }
-
-            // Prevent going off screen
-            int half_width = size.width() / 2;
-            int half_height = size.height() / 2;
-
-            if(sprite.x() < MIN_X + half_width) {
-                sprite.set_x(MIN_X + half_width);
-            }
-            if(sprite.x() > MAX_X - half_width) {
-                sprite.set_x(MAX_X - half_width);
-            }
-
-            if(sprite.y() < MIN_Y + half_height) {
-                sprite.set_y(MIN_Y + half_height);
-            }
-            if(sprite.y() > MAX_Y - half_height) {
-                sprite.set_y(MAX_Y - half_height);
-            }
-
-            bounding_box = create_bounding_box(sprite, size);
- 
-        if (bn::keypad::up_held())
-        {
+        if(bn::keypad::up_held()) {
             sprite.set_y(sprite.y() - speed);
         }
-        if (bn::keypad::down_held())
-        {
+        if(bn::keypad::down_held()) {
             sprite.set_y(sprite.y() + speed);
-         }
+        }
+
+        // Prevent going off screen
+        int half_width = size.width() / 2;
+        int half_height = size.height() / 2;
+
+        if(sprite.x() < MIN_X + half_width) {
+            sprite.set_x(MIN_X + half_width);
+        }
+        if(sprite.x() > MAX_X - half_width) {
+            sprite.set_x(MAX_X - half_width);
+        }
+        if(sprite.y() < MIN_Y + half_height) {
+            sprite.set_y(MIN_Y + half_height);
+        }
+        if(sprite.y() > MAX_Y - half_height) {
+            sprite.set_y(MAX_Y - half_height);
+        }
 
         bounding_box = create_bounding_box(sprite, size);
     }
@@ -192,65 +162,57 @@ public:
     bn::rect bounding_box; // The rectangle around the sprite for checking collision
 };
 
- 
-    class Enemy {
-        public:
-            Enemy(int starting_x, int starting_y, bn::size enemy_size, bn::fixed enemy_speed) :
-                sprite(bn::sprite_items::square.create_sprite(starting_x, starting_y)),
-                size(enemy_size),
-                bounding_box(create_bounding_box(sprite, size)),
-                speed(enemy_speed)
+class Enemy {
+public:
+    Enemy(int starting_x, int starting_y, bn::size enemy_size, bn::fixed enemy_speed) :
+        sprite(bn::sprite_items::square.create_sprite(starting_x, starting_y)),
+        size(enemy_size),
+        bounding_box(create_bounding_box(sprite, size)),
+        speed(enemy_speed)
+    {}    
 
-            {}    
+    void update(Player& player) {
+        // Move in X direction toward player
+        if(sprite.x() < player.sprite.x()) {
+            sprite.set_x(sprite.x() + speed);
+        }
+        else if(sprite.x() > player.sprite.x()) {
+            sprite.set_x(sprite.x() - speed);
+        }
 
-            void update(Player& player) {
-                // Move in X direction toward player
-                if(sprite.x() < player.sprite.x()) {
-                    sprite.set_x(sprite.x() + speed);
-                }
-                else if(sprite.x() > player.sprite.x()) {
-                    sprite.set_x(sprite.x() - speed);
-                }
+        // Move in Y direction toward player
+        if(sprite.y() < player.sprite.y()) {
+            sprite.set_y(sprite.y() + speed);
+        }
+        else if(sprite.y() > player.sprite.y()) {
+            sprite.set_y(sprite.y() - speed);
+        }
 
-                // Move in Y direction toward player
-                if(sprite.y() < player.sprite.y()) {
-                    sprite.set_y(sprite.y() + speed);
-                }
-                else if(sprite.y() > player.sprite.y()) {
-                    sprite.set_y(sprite.y() - speed);
-                }
+        // Update bounding box
+        bounding_box = create_bounding_box(sprite, size);
+    }
 
-                // Update bounding box
-                bounding_box = create_bounding_box(sprite, size);
-            }
+    // function to jump to a random position
+    void jump_to_random_position() {
+        int random_x = random.get_int(MIN_X + 10, MAX_X - 10);
+        int random_y = random.get_int(MIN_Y + 10, MAX_Y - 10);
 
-            // function to jump to a random position
-            void jump_to_random_position() {
-                int random_x = random.get_int(MIN_X + 10, MAX_X - 10);
-                int random_y = random.get_int(MIN_Y + 10, MAX_Y - 10);
+        sprite.set_x(random_x);
+        sprite.set_y(random_y);
 
-                sprite.set_x(random_x);
-                sprite.set_y(random_y);
+        bounding_box = create_bounding_box(sprite, size);
+    }
 
-                bounding_box = create_bounding_box(sprite, size);
-            }
-            
-            bn::sprite_ptr sprite;
-            bn::size size;
-            bn::rect bounding_box;
-            bn::fixed speed;
-            bn::random random;
- 
- 
     bn::sprite_ptr sprite;
     bn::size size;
     bn::rect bounding_box;
-};
+    bn::fixed speed;
+    bn::random random;
+}; 
 
 int main()
 {
     bn::core::init();
-    
 
     // Create a new score display
     ScoreDisplay scoreDisplay;
@@ -258,9 +220,8 @@ int main()
     // Create a player and initialize it
     Player player = Player (-50, 22, 3, PLAYER_SIZE); 
 
- 
     Enemy enemy(40, -10, ENEMY_SIZE, 1.5);
- 
+
     // Vector of enemies
     bn::vector<Enemy, 10> enemies;  
     enemies.push_back(Enemy(-40,0 , ENEMY_SIZE, 1.5));
@@ -269,56 +230,51 @@ int main()
     int frame_counter = 0;
     const int FRAMES_TO_ADD = 150;
 
+    // Added enemies 
+    // enemies.push_back(Enemy(40, -20, ENEMY_SIZE, 1.5));
+    // enemies.push_back(Enemy(40,  20, ENEMY_SIZE, 1.5));
+    // enemies.push_back(Enemy(10,  20, ENEMY_SIZE, 1.5));
+    // enemies.push_back(Enemy(-50, 0,  ENEMY_SIZE, 1.5));
 
-
-// Added enemies 
-// enemies.push_back(Enemy(40, -20, ENEMY_SIZE, 1.5));
-// enemies.push_back(Enemy(40,  20, ENEMY_SIZE, 1.5));
-// enemies.push_back(Enemy(10,  20, ENEMY_SIZE, 1.5));
-// enemies.push_back(Enemy(-50, 0,  ENEMY_SIZE, 1.5));
-
-
-        while (true)
-        {
+    while (true)
+    {
         // Update player position
         player.update();
         enemy.update(player);
 
-
         frame_counter++;
         if(frame_counter >= FRAMES_TO_ADD && enemies.size() < 10) {
-        int random_x = bn::random().get_int(MIN_X + 10, MAX_X - 10);
-        int random_y = bn::random().get_int(MIN_Y + 10, MAX_Y - 10);
-        enemies.push_back(Enemy(random_x, random_y, ENEMY_SIZE, 1.5));
-        frame_counter = 0;
+            int random_x = bn::random().get_int(MIN_X + 10, MAX_X - 10);
+            int random_y = bn::random().get_int(MIN_Y + 10, MAX_Y - 10);
+            enemies.push_back(Enemy(random_x, random_y, ENEMY_SIZE, 1.5));
+            frame_counter = 0;
         }
 
- 
         // Reset the current score and player position if the player collides with enemy
         if(enemy.bounding_box.intersects(player.bounding_box)) {
             scoreDisplay.resetScore();
             player.sprite.set_x(44);
             player.sprite.set_y(22);
             enemy.jump_to_random_position();
- 
-        // Loop over all the enemies
-        for (Enemy& enemy : enemies)
-        {
-        // Update enemy bounding box
-        enemy.bounding_box = create_bounding_box(enemy.sprite, enemy.size);
-
-        // Check for collision with player
-        if (enemy.bounding_box.intersects(player.bounding_box))
-        {
-        // Reset player position
-        player.sprite.set_x(-50);
-        player.sprite.set_y(22);
-
-        // Reset score
-        scoreDisplay.resetScore();
         }
- 
-    }
+
+        // Loop over all the enemies
+        for (Enemy& e : enemies)
+        {
+            // Update enemy bounding box
+            enemy.bounding_box = create_bounding_box(enemy.sprite, enemy.size);
+
+            // Check for collision with player
+            if (e.bounding_box.intersects(player.bounding_box))
+            {
+                // Reset player position
+                player.sprite.set_x(-50);
+                player.sprite.set_y(22);
+
+                // Reset score
+                scoreDisplay.resetScore();
+            }
+        }
 
         // Update and display scores after checking all enemies
         scoreDisplay.update();
@@ -326,3 +282,4 @@ int main()
         // Refresh the screen
         bn::core::update();
     }
+}
