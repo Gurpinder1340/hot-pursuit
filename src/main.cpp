@@ -15,7 +15,7 @@
 #include "bn_sprite_items_square.h"
 
 // Width and height of the the player bounding box
-static constexpr bn::size PLAYER_SIZE = {8, 8};
+static constexpr bn::size PLAYER_SIZE = {3, 3};
 static constexpr bn::size ENEMY_SIZE = {17, 17};
 
 static constexpr int MIN_Y = -bn::display::height() / 2;
@@ -233,7 +233,7 @@ int main()
     ScoreDisplay scoreDisplay;
 
     // Create a player and initialize it
-    Player player = Player(-50, 22, 3, PLAYER_SIZE);
+    Player player = Player(0, 2, 3, PLAYER_SIZE);
 
     Enemy enemy(40, -10, ENEMY_SIZE, 1.5);
 
