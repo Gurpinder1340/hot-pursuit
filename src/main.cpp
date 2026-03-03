@@ -1,14 +1,9 @@
 #include <bn_core.h>
 #include <bn_display.h>
-//#include <bn_keypad.h>
-//#include <bn_rect.h>
 #include <bn_size.h>
-//#include <bn_string.h>
-//#include <bn_sprite_ptr.h>
-//#include <bn_sprite_text_generator.h>
 #include <bn_random.h>
-//#include <cstdlib>
-//#include <ctime>
+#include <bn_backdrop.h>
+#include <bn_color.h>
 
 #include "common_fixed_8x16_font.h"
 #include "bn_sprite_items_dot.h"
@@ -30,6 +25,9 @@ int main()
 {
     bn::core::init();
 
+    bn::backdrop::set_color(bn::color(0, 0, 10));
+
+
     // Create a new score display
     ScoreDisplay scoreDisplay;
 
@@ -46,17 +44,13 @@ int main()
     int frame_counter = 0;
     const int FRAMES_TO_ADD = 150;
 
-    // Added enemies
-    // enemies.push_back(Enemy(40, -20, ENEMY_SIZE, 1.5));
-    // enemies.push_back(Enemy(40,  20, ENEMY_SIZE, 1.5));
-    // enemies.push_back(Enemy(10,  20, ENEMY_SIZE, 1.5));
-    // enemies.push_back(Enemy(-50, 0,  ENEMY_SIZE, 1.5));
 
     while (true)
     {
         // Update player position
         player.update();
         enemy.update(player);
+
 
         frame_counter++;
         if (frame_counter >= FRAMES_TO_ADD && enemies.size() < 10)
