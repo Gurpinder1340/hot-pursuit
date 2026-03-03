@@ -8,7 +8,7 @@
 #include <bn_sprite_text_generator.h>
 #include <bn_random.h>
 #include <cstdlib>
-#include <ctime> 
+#include <ctime>
 
 #include "common_fixed_8x16_font.h"
 #include "bn_sprite_items_dot.h"
@@ -16,7 +16,7 @@
 
 // Width and height of the the player bounding box
 static constexpr bn::size PLAYER_SIZE = {8, 8};
-static constexpr bn::size ENEMY_SIZE = {8, 8};
+static constexpr bn::size ENEMY_SIZE = {17, 17};
 
 static constexpr int MIN_Y = -bn::display::height() / 2;
 static constexpr int MAX_Y = bn::display::height() / 2;
@@ -122,16 +122,20 @@ public:
      */
     void update()
     {
-        if(bn::keypad::right_held()) {
+        if (bn::keypad::right_held())
+        {
             sprite.set_x(sprite.x() + speed);
         }
-        if(bn::keypad::left_held()) {
+        if (bn::keypad::left_held())
+        {
             sprite.set_x(sprite.x() - speed);
         }
-        if(bn::keypad::up_held()) {
+        if (bn::keypad::up_held())
+        {
             sprite.set_y(sprite.y() - speed);
         }
-        if(bn::keypad::down_held()) {
+        if (bn::keypad::down_held())
+        {
             sprite.set_y(sprite.y() + speed);
         }
 
@@ -139,16 +143,20 @@ public:
         int half_width = size.width() / 2;
         int half_height = size.height() / 2;
 
-        if(sprite.x() < MIN_X + half_width) {
+        if (sprite.x() < MIN_X + half_width)
+        {
             sprite.set_x(MIN_X + half_width);
         }
-        if(sprite.x() > MAX_X - half_width) {
+        if (sprite.x() > MAX_X - half_width)
+        {
             sprite.set_x(MAX_X - half_width);
         }
-        if(sprite.y() < MIN_Y + half_height) {
+        if (sprite.y() < MIN_Y + half_height)
+        {
             sprite.set_y(MIN_Y + half_height);
         }
-        if(sprite.y() > MAX_Y - half_height) {
+        if (sprite.y() > MAX_Y - half_height)
+        {
             sprite.set_y(MAX_Y - half_height);
         }
 
@@ -162,29 +170,35 @@ public:
     bn::rect bounding_box; // The rectangle around the sprite for checking collision
 };
 
-class Enemy {
+class Enemy
+{
 public:
-    Enemy(int starting_x, int starting_y, bn::size enemy_size, bn::fixed enemy_speed) :
-        sprite(bn::sprite_items::square.create_sprite(starting_x, starting_y)),
-        size(enemy_size),
-        bounding_box(create_bounding_box(sprite, size)),
-        speed(enemy_speed)
-    {}    
+    Enemy(int starting_x, int starting_y, bn::size enemy_size, bn::fixed enemy_speed) : sprite(bn::sprite_items::square.create_sprite(starting_x, starting_y)),
+                                                                                        size(enemy_size),
+                                                                                        bounding_box(create_bounding_box(sprite, size)),
+                                                                                        speed(enemy_speed)
+    {
+    }
 
-    void update(Player& player) {
+    void update(Player &player)
+    {
         // Move in X direction toward player
-        if(sprite.x() < player.sprite.x()) {
+        if (sprite.x() < player.sprite.x())
+        {
             sprite.set_x(sprite.x() + speed);
         }
-        else if(sprite.x() > player.sprite.x()) {
+        else if (sprite.x() > player.sprite.x())
+        {
             sprite.set_x(sprite.x() - speed);
         }
 
         // Move in Y direction toward player
-        if(sprite.y() < player.sprite.y()) {
+        if (sprite.y() < player.sprite.y())
+        {
             sprite.set_y(sprite.y() + speed);
         }
-        else if(sprite.y() > player.sprite.y()) {
+        else if (sprite.y() > player.sprite.y())
+        {
             sprite.set_y(sprite.y() - speed);
         }
 
@@ -193,7 +207,8 @@ public:
     }
 
     // function to jump to a random position
-    void jump_to_random_position() {
+    void jump_to_random_position()
+    {
         int random_x = random.get_int(MIN_X + 10, MAX_X - 10);
         int random_y = random.get_int(MIN_Y + 10, MAX_Y - 10);
 
@@ -208,7 +223,7 @@ public:
     bn::rect bounding_box;
     bn::fixed speed;
     bn::random random;
-}; 
+};
 
 int main()
 {
@@ -218,19 +233,19 @@ int main()
     ScoreDisplay scoreDisplay;
 
     // Create a player and initialize it
-    Player player = Player (-50, 22, 3, PLAYER_SIZE); 
+    Player player = Player(-50, 22, 3, PLAYER_SIZE);
 
     Enemy enemy(40, -10, ENEMY_SIZE, 1.5);
 
     // Vector of enemies
-    bn::vector<Enemy, 10> enemies;  
-    enemies.push_back(Enemy(-40,0 , ENEMY_SIZE, 1.5));
+    bn::vector<Enemy, 10> enemies;
+    enemies.push_back(Enemy(-40, 0, ENEMY_SIZE, 1.5));
 
     // counter to add enemies
     int frame_counter = 0;
     const int FRAMES_TO_ADD = 150;
 
-    // Added enemies 
+    // Added enemies
     // enemies.push_back(Enemy(40, -20, ENEMY_SIZE, 1.5));
     // enemies.push_back(Enemy(40,  20, ENEMY_SIZE, 1.5));
     // enemies.push_back(Enemy(10,  20, ENEMY_SIZE, 1.5));
@@ -243,7 +258,8 @@ int main()
         enemy.update(player);
 
         frame_counter++;
-        if(frame_counter >= FRAMES_TO_ADD && enemies.size() < 10) {
+        if (frame_counter >= FRAMES_TO_ADD && enemies.size() < 10)
+        {
             int random_x = bn::random().get_int(MIN_X + 10, MAX_X - 10);
             int random_y = bn::random().get_int(MIN_Y + 10, MAX_Y - 10);
             enemies.push_back(Enemy(random_x, random_y, ENEMY_SIZE, 1.5));
@@ -251,7 +267,8 @@ int main()
         }
 
         // Reset the current score and player position if the player collides with enemy
-        if(enemy.bounding_box.intersects(player.bounding_box)) {
+        if (enemy.bounding_box.intersects(player.bounding_box))
+        {
             scoreDisplay.resetScore();
             player.sprite.set_x(44);
             player.sprite.set_y(22);
@@ -259,7 +276,7 @@ int main()
         }
 
         // Loop over all the enemies
-        for (Enemy& e : enemies)
+        for (Enemy &e : enemies)
         {
             // Update enemy bounding box
             enemy.bounding_box = create_bounding_box(enemy.sprite, enemy.size);
